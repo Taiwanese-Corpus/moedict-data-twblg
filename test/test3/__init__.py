@@ -43,7 +43,7 @@ class MyHTMLParser(HTMLParser):
              
            
 def main():
-   result = excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\例句.xls')|excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\釋義.xls')    
+   result = excel_table(r'../twblg_data_20131230/例句.xls')|excel_table(r'../twblg_data_20131230/釋義.xls')    
    
    
    for i in result:      
@@ -54,10 +54,8 @@ def main():
        parser.feed(sock.read().decode("utf8").strip())
            
        if parser.counter == 10:
-           temp = excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\例句.xls')|excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\釋義.xls')                              
-           
-           for i in range(len(temp)):
-               SecondWord = urllib.request.quote(temp.pop())                
+           for j in result:
+               SecondWord = urllib.request.quote(j)                
                urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+SecondWord+"&querytarget=2"
                sock = urllib.request.urlopen(urlx)
                parser = MyHTMLParser(strict=False)
