@@ -27,41 +27,45 @@ def excel_table(file , colnameindex=0, by_index=0):
 
 
 class MyHTMLParser(HTMLParser):
-    Output = []
-    counter = 0 
-    final = set()          
-    def handle_data(self, data):                                        
-        
-        self.counter += 1                  
-        print(self.counter)
-        if data not in set(self.final):        
-            self.Output.append(data)
-            self.final = list(set(self.Output))
-            self.final.sort(key = self.Output.index)   
-        print(self.final)              
-        
-             
+    #無法度確定什麼時候會初使化，資料盡量要歸零，所以丟給main維護
+    def 初使化(self):
+        self.output = []
+        self.counter = 0 
+    def handle_data(self, data):
+        self.counter += 1                      
+        self.output.append(data)    
+
            
 def main():
-   result = excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\例句.xls')|excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\釋義.xls')    
-   
-   
-   for i in result:      
+   result = excel_table(r'../twblg_data_20131230/例句.xls')|excel_table(r'../twblg_data_20131230/釋義.xls')    
+   全部國語詞=[]
+   國語詞集合=set()
+   for i in ['一']:      
        FirstWord = urllib.request.quote(i)        
        urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+"&querytarget=2"
        sock = urllib.request.urlopen(urlx)
        parser = MyHTMLParser(strict=False)     
+       parser.初使化()
        parser.feed(sock.read().decode("utf8").strip())
-           
+       for 詞 in parser.output:
+           if 詞 not in 國語詞集合:
+               全部國語詞.append(詞)
+               國語詞集合.add(詞)
+               print(全部國語詞)
+       
        if parser.counter == 10:
-           temp = excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\例句.xls')|excel_table(r'E:\Documents and Settings\LEO\git\temp\test\twblg_data_20131230\釋義.xls')                              
-           
-           for i in range(len(temp)):
-               SecondWord = urllib.request.quote(temp.pop())                
+           for j in result:
+               SecondWord = urllib.request.quote(j)                
                urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+SecondWord+"&querytarget=2"
                sock = urllib.request.urlopen(urlx)
                parser = MyHTMLParser(strict=False)
+               parser.初使化()
                parser.feed(sock.read().decode("utf8").strip())
+               for 詞 in parser.output:
+                   if 詞 not in 國語詞集合:
+                       全部國語詞.append(詞)
+                       國語詞集合.add(詞)
+                       print(全部國語詞)
                              
  
    print("done")
