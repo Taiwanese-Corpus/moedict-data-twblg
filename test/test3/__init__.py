@@ -40,7 +40,7 @@ def main():
    result = excel_table(r'../twblg_data_20131230/例句.xls')|excel_table(r'../twblg_data_20131230/釋義.xls')    
    全部國語詞=[]
    國語詞集合=set()
-   for i in ['一']:      
+   for i in result:      
        FirstWord = urllib.request.quote(i)        
        urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+"&querytarget=2"
        sock = urllib.request.urlopen(urlx)
