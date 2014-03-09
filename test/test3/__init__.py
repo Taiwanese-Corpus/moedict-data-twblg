@@ -51,74 +51,74 @@ class MyHTMLParser(HTMLParser):
            
 class 資料處理():
    excel = handle_excel()
-   所有字集 = excel.excel_table(r'../twblg_data_20131230/例句.xls')|excel.excel_table(r'../twblg_data_20131230/釋義.xls') 
+   所有字集 = excel.excel_table(r'../twblg_data_20131230/例句.xls')|excel.excel_table(r'../twblg_data_20131230/釋義.xls')
+   數字對照表 = excel.excel_table2(r'../twblg_data_20131230/詞目總檔(含俗諺).xls')   
    全部國語詞=[]
    國語詞集合=set()
    國台字音表=[]
-   for i in ["其"]:      
-       FirstWord = urllib.request.quote(i)        
-       urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+"&querytarget=2"
-       sock = urllib.request.urlopen(urlx)
-       parser = MyHTMLParser(strict=False)     
-       parser.初使化()
-       parser.feed(sock.read().decode("utf8").strip())
-       for 詞 in parser.output:
-           if 詞 not in 國語詞集合:
-               全部國語詞.append(詞)
-               國語詞集合.add(詞)
-       print(全部國語詞)
-       
-       if parser.counter == 10:
-           for j in 所有字集:
-               SecondWord = urllib.request.quote(j)                
-               urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+SecondWord+"&querytarget=2"
-               sock = urllib.request.urlopen(urlx)
-               parser = MyHTMLParser(strict=False)
-               parser.初使化()
-               parser.feed(sock.read().decode("utf8").strip())
-               for 詞 in parser.output:
-                   if 詞 not in 國語詞集合:
-                       全部國語詞.append(詞)
-                       國語詞集合.add(詞)
-                       print(全部國語詞)  
-      
-   for i in 全部國語詞:
-       a = '<tr class="all_space1">'
-       b = '</table>'
-       temp = []
-       x = 0
-       單詞 = urllib.request.quote(i)
-       urlx = "http://twblg.dict.edu.tw/holodict_new/result.jsp?radiobutton=0&limit=20&querytarget=2&sample="+單詞+"&submit.x=42&submit.y=14"
-       sock = urllib.request.urlopen(urlx)
-       parser = MyHTMLParser(strict=False)
-       parser.初使化()
-       parser.output.append(i)
- 
-       for j in sock.read().decode("utf8").split('\n'):
-           j = j.strip()           
-           if j == a or x >0:
-               x = 1                                      
-               parser.feed(j)
-               if parser.counter == 3:
-                   國台字音表.append(parser.output)                            
-                   parser.初使化()
-                   parser.output.append(i)                                                                  
-                                               
-           if j == b:          
-            x = 0                    
    
-   數字對照表 = excel.excel_table2(r'../twblg_data_20131230/詞目總檔(含俗諺).xls')  
-   for i in range(len(國台字音表)):
-       for j in range(len(數字對照表)):
-           if 國台字音表[i][3] == 數字對照表[j]:
-               國台字音表[i][1] = 數字對照表[j-1]
-
-   print(國台字音表) 
+   def 單字搜尋(self):
+       for i in ["其"]:      
+           FirstWord = urllib.request.quote(i)        
+           urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+"&querytarget=2"
+           sock = urllib.request.urlopen(urlx)
+           parser = MyHTMLParser(strict=False)     
+           parser.初使化()
+           parser.feed(sock.read().decode("utf8").strip())
+           for 詞 in parser.output:
+               if 詞 not in self.國語詞集合:
+                   self.全部國語詞.append(詞)
+                   self.國語詞集合.add(詞)       
+       
+           if parser.counter == 10:
+               for j in self.所有字集:
+                   SecondWord = urllib.request.quote(j)                
+                   urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+SecondWord+"&querytarget=2"
+                   sock = urllib.request.urlopen(urlx)
+                   parser = MyHTMLParser(strict=False)
+                   parser.初使化()
+                   parser.feed(sock.read().decode("utf8").strip())
+                   for 詞 in parser.output:
+                       if 詞 not in self.國語詞集合:
+                           self.全部國語詞.append(詞)
+                           self.國語詞集合.add(詞)
+       print(self.全部國語詞)                         
+   
+   def 單詞搜尋(self):
+       定位a = '<tr class="all_space1">'
+       定位b = '</table>'       
+       for i in self.全部國語詞:          
+           x = 0
+           單詞 = urllib.request.quote(i)
+           urlx = "http://twblg.dict.edu.tw/holodict_new/result.jsp?radiobutton=0&limit=20&querytarget=2&sample="+單詞+"&submit.x=42&submit.y=14"
+           sock = urllib.request.urlopen(urlx)
+           parser = MyHTMLParser(strict=False)
+           parser.初使化()
+           parser.output.append(i)
+ 
+           for j in sock.read().decode("utf8").split('\n'):
+               j = j.strip()           
+               if j == 定位a or x >0:
+                   x = 1                                      
+                   parser.feed(j)
+                   if parser.counter == 3:
+                       self.國台字音表.append(parser.output)                            
+                       parser.初使化()
+                       parser.output.append(i)                                                                                                               
+               if j == 定位b:          
+                    x = 0                          
+   
+   def 編號(self):
+       for i in range(len(self.國台字音表)):
+           for j in range(len(self.數字對照表)):
+               if self.國台字音表[i][3] == self.數字對照表[j]:
+                   self.國台字音表[i][1] = self.數字對照表[j-1]
+       print(self.國台字音表) 
             
 if __name__ == "__main__":
-    資料處理()          
-
-
+    資料處理().單字搜尋()          
+    資料處理().單詞搜尋()   
+    資料處理().編號() 
 
 
             
