@@ -3,39 +3,40 @@ import xdrlib , sys
 import xlrd
 from html.parser import HTMLParser
 
-def open_excel(file):
-    try:
-        data = xlrd.open_workbook(file)
-        return data
-    except Exception as e:
-        print (str(e))
+class handle_excel():
+    def open_excel(self,file):
+        try:
+            data = xlrd.open_workbook(file)
+            return data
+        except Exception as e:
+            print (str(e))
 
-def excel_table(file , colnameindex=0, by_index=0):
-    data = open_excel(file)
-    table = data.sheets()[by_index]
-    nrows = table.nrows 
-    colnames = table.row_values(colnameindex)  
-    a = set()
-    b = set()   
-    for rownum in range(1, nrows):
-        row = table.row_values(rownum)
-        if row:
-            for i in range(len(colnames)):
-                a = set(row[i])
-                b = a|b                                              
-    return b
+    def excel_table(self , file , colnameindex=0, by_index=0):
+        data = self.open_excel(file)
+        table = data.sheets()[by_index]
+        nrows = table.nrows 
+        colnames = table.row_values(colnameindex)  
+        a = set()
+        b = set()   
+        for rownum in range(1, nrows):
+            row = table.row_values(rownum)
+            if row:
+                for i in range(len(colnames)):
+                    a = set(row[i])
+                    b = a|b                                              
+        return b
 
-def excel_table2(file , colnameindex=0, by_index=0):
-    數字對照表 = []    
-    data = open_excel(file)
-    table = data.sheets()[by_index]
-    nrows = table.nrows  # 行数    
-    colnames = table.row_values(colnameindex)  # 某一行数据          
-    for rownum in range(1, nrows):
-        row = table.row_values(rownum)
-        數字對照表.append(row[0])        
-        數字對照表.append(row[3])           
-    return 數字對照表
+    def excel_table2(self , file , colnameindex=0, by_index=0):
+        a = []    
+        data = self.open_excel(file)
+        table = data.sheets()[by_index]
+        nrows = table.nrows  # 行数    
+        colnames = table.row_values(colnameindex)  # 某一行数据          
+        for rownum in range(1, nrows):
+            row = table.row_values(rownum)
+            a.append(row[0])        
+            a.append(row[3])           
+        return a
 
 
 class MyHTMLParser(HTMLParser):
@@ -48,8 +49,9 @@ class MyHTMLParser(HTMLParser):
         self.output.append(data)    
 
            
-def main():
-   result = excel_table(r'../twblg_data_20131230/例句.xls')|excel_table(r'../twblg_data_20131230/釋義.xls') 
+class 資料處理():
+   excel = handle_excel()
+   所有字集 = excel.excel_table(r'../twblg_data_20131230/例句.xls')|excel.excel_table(r'../twblg_data_20131230/釋義.xls') 
    全部國語詞=[]
    國語詞集合=set()
    國台字音表=[]
@@ -67,7 +69,7 @@ def main():
        print(全部國語詞)
        
        if parser.counter == 10:
-           for j in result:
+           for j in 所有字集:
                SecondWord = urllib.request.quote(j)                
                urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+SecondWord+"&querytarget=2"
                sock = urllib.request.urlopen(urlx)
@@ -78,10 +80,8 @@ def main():
                    if 詞 not in 國語詞集合:
                        全部國語詞.append(詞)
                        國語詞集合.add(詞)
-                       print(全部國語詞)
-    
-   
-   
+                       print(全部國語詞)  
+      
    for i in 全部國語詞:
        a = '<tr class="all_space1">'
        b = '</table>'
@@ -107,7 +107,7 @@ def main():
            if j == b:          
             x = 0                    
    
-   數字對照表 = excel_table2(r'../twblg_data_20131230/詞目總檔(含俗諺).xls')  
+   數字對照表 = excel.excel_table2(r'../twblg_data_20131230/詞目總檔(含俗諺).xls')  
    for i in range(len(國台字音表)):
        for j in range(len(數字對照表)):
            if 國台字音表[i][3] == 數字對照表[j]:
@@ -116,7 +116,7 @@ def main():
    print(國台字音表) 
             
 if __name__ == "__main__":
-    main()          
+    資料處理()          
 
 
 
