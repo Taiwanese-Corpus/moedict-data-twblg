@@ -53,7 +53,7 @@ def main():
    全部國語詞=[]
    國語詞集合=set()
    國台字音表=[]
-   for i in ["其"]:      
+   for i in ["一"]:      
        FirstWord = urllib.request.quote(i)        
        urlx = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="+FirstWord+"&querytarget=2"
        sock = urllib.request.urlopen(urlx)
@@ -92,7 +92,7 @@ def main():
        sock = urllib.request.urlopen(urlx)
        parser = MyHTMLParser(strict=False)
        parser.初使化()
-       parser.output.append(i+":")
+       parser.output.append(i)
  
        for j in sock.read().decode("utf8").split('\n'):
            j = j.strip()           
@@ -100,8 +100,7 @@ def main():
                x = 1                                      
                parser.feed(j)
                if parser.counter == 3:
-                   國台字音表.append(parser.output)
-                   print(parser.output)          
+                   國台字音表.append(parser.output)                            
                    parser.初使化()
                    parser.output.append(i+":")                                                                  
                                                
@@ -114,8 +113,7 @@ def main():
            if 國台字音表[i][3] == 數字對照表[j]:
                國台字音表[i][1] = 數字對照表[j-1]
 
-   print(國台字音表)
-   print("done")
+   print(國台字音表) 
             
 if __name__ == "__main__":
     main()          
