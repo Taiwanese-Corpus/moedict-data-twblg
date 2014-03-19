@@ -1,6 +1,7 @@
 import urllib.request
 import xdrlib , sys
 import xlrd
+import time
 from html.parser import HTMLParser
 
 class handle_excel():
@@ -34,8 +35,7 @@ class handle_excel():
         colnames = table.row_values(colnameindex)  # 某一行数据          
         for rownum in range(1, nrows):
             row = table.row_values(rownum)
-            a.append(row[0])        
-            a.append(row[3])           
+            a.append( (row[0],row[3]) )           
         return a
 
 
@@ -57,23 +57,35 @@ class 資料處理():
    國語詞集合=set()
    國台字音表=[]
    
-   def 單字搜尋(self, word = ""):
-       for i in self.所有字集:      
-           TotalWord = word + urllib.request.quote(i) 
-           urla = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample="
-           urlb = "&querytarget=2"
-           url = urla + TotalWord + urlb
-           sock = urllib.request.urlopen(url)
+   def 單字搜尋(self, Word = ""):
+       for i in self.所有字集:
+           while True:
+               try:
+                   NextWord = urllib.request.quote(i)
+               except:
+                   time.sleep(6)
+               else:
+                   break
+           NewWord = Word + NextWord            
+           url = "http://twblg.dict.edu.tw/holodict_new/searchSuggest.jsp?sample=" + NewWord + "&querytarget=2"
+           while True:
+               try:
+                   sock = urllib.request.urlopen(url)
+               except:
+                   time.sleep(6)
+               else:
+                   break 
            parser = MyHTMLParser(strict=False)     
            parser.初使化()
            parser.feed(sock.read().decode("utf8").strip())
+           sock.close()
            for 詞 in parser.output:
                if 詞 not in self.國語詞集合:
                    self.全部國語詞.append(詞)
                    self.國語詞集合.add(詞)       
                    print(self.全部國語詞) 
            if parser.counter == 10:
-               self.單字搜尋(urllib.request.quote(i))               
+               self.單字搜尋(NextWord)           
                               
    
    def 單詞搜尋(self):
@@ -98,19 +110,21 @@ class 資料處理():
                        parser.初使化()
                        parser.output.append(i)                                                                                                               
                if j == 定位b:          
-                    x = 0                          
+                    x = 0
+           sock.close()                          
    
    def 編號(self):
        for i in range(len(self.國台字音表)):
            for j in range(len(self.數字對照表)):
-               if self.國台字音表[i][3] == self.數字對照表[j]:
-                   self.國台字音表[i][1] = self.數字對照表[j-1]
+               if self.國台字音表[i][3] == self.數字對照表[j][1]:
+                   self.國台字音表[i][1] = self.數字對照表[j][0]
        print(self.國台字音表) 
             
 if __name__ == "__main__":
-    資料處理().單字搜尋()          
-    資料處理().單詞搜尋()   
-    資料處理().編號() 
+    資料 = 資料處理()
+    資料.單字搜尋()          
+    資料.單詞搜尋()   
+    資料.編號() 
 
 
             
