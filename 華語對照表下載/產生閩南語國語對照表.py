@@ -3,6 +3,8 @@ import xlrd
 import time
 from html.parser import HTMLParser
 import json
+import os
+import csv
 
 class excel處理():
 	def open_excel(self, file):
@@ -28,14 +30,15 @@ class excel處理():
 		return b
 
 	def excel_table_for_編號(self, file, colnameindex=0, by_index=0):
-		a = []	
-		data = self.open_excel(file)
-		table = data.sheets()[by_index]
-		nrows = table.nrows  # 行数	
-		for rownum in range(1, nrows):
-				row = table.row_values(rownum)
-				a.append((row[0], row[3]))			
-		return a
+		詞目總檔 = []
+		with open(file) as csvfile:
+			reader = csv.DictReader(csvfile)
+			for row in reader:
+				詞目總檔.append({
+						'主編碼':row['主編碼'],
+						'詞目':row['詞目'],
+						'音讀':row['音讀']})
+		return 詞目總檔
 
 
 class MyHTMLParser(HTMLParser):
@@ -110,13 +113,14 @@ class 資料處理():
 	def 編號(self, 數字對照表):
 		for i in range(len(self.國台字音表)):
 			for j in range(len(數字對照表)):
-					if self.國台字音表[i][3] == 數字對照表[j][1]:
-						self.國台字音表[i][1] = 數字對照表[j][0] 
+					if self.國台字音表[i][3] == 數字對照表[j]['音讀']:
+						self.國台字音表[i][1] = 數字對照表[j]['主編號'] 
 				
 if __name__ == "__main__":
+	這馬資料夾 = os.path.dirname(os.path.abspath(__file__))
 	excel處理工具 = excel處理()
 	所有字集 = ['一', '個']  # excel.excel_table_for_字元(r'../twblg_data_20131230/例句.xls')|excel.excel_table_for_字元(r'../twblg_data_20131230/釋義.xls')
-	數字對照表 = excel處理工具.excel_table_for_編號(r'../twblg_data_20131230/詞目總檔(含俗諺).xls')
+	數字對照表 = excel處理工具.excel_table_for_編號(os.path.join(這馬資料夾, '..', 'raw','詞目總檔.csv'))
 	資料 = 資料處理()
 	資料.單字搜尋(所有字集, '')
 	for i in 資料.全部國語詞:
