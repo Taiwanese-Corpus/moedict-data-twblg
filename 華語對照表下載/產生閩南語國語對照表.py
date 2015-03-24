@@ -4,7 +4,9 @@ import time
 from html.parser import HTMLParser
 import json
 import os
+from bs4 import BeautifulSoup
 import csv
+from urllib.parse import urlparse, parse_qs
 
 class excel處理():
 	def open_excel(self, file):
@@ -83,32 +85,34 @@ class 資料處理():
 				self.單字搜尋(所有字集, NewWord)
 			self.單字搜尋(所有字集, NextWord)
 	
-	def 單詞搜尋(self, i):
-		定位a = '<tr class="all_space1">'
-		定位b = '</table>'		
-		x = 0
-		單詞 = urllib.request.quote(i)
+	def 單詞搜尋(self, 華語):
+		單詞 = urllib.request.quote(華語)
 		urlx = \
 			"http://twblg.dict.edu.tw/holodict_new/result.jsp?radiobutton=0&limit=20&querytarget=2&sample={0}&submit.x=42&submit.y=14"\
 				.format(單詞)
 		sock = urllib.request.urlopen(urlx)
-		parser = MyHTMLParser(strict=False)
-		parser.初使化()
-		parser.output.append(i)
-
-		for j in sock.read().decode("utf8").split('\n'):
-				j = j.strip()			
-				if j == 定位a or x > 0:
-					x = 1												
-					parser.feed(j)
-					if parser.counter == 3:
-						self.國台字音表.append(parser.output)									
-						parser.初使化()
-						parser.output.append(i)																																					
-				if j == 定位b:			
-					x = 0
-		sock.close()
-		return self.國台字音表
+		soup = BeautifulSoup(sock.read().decode("utf8"))
+		對應閩南語資料=[]
+		表 = soup.findAll('table', {'class':'shengmuTab'})
+		for table in 表:
+# 			print(tr,'1')
+			for tr in table.findAll('tr')[1:]:
+				td = tr.findAll('td')
+# 				print(td[0])
+				網址 = td[1].find('a').get('href')
+				網址結構 = urlparse(網址)
+				編號 = parse_qs(網址結構.query)['n_no'][0]
+# 				print(編號)
+# 				print(td[1].get_text())
+# 				print(td[2].get_text())
+# 				print(td[3].get_text())
+				對應閩南語資料.append({
+					'華語':華語, 
+					'主編號':編號, 
+					'漢字': td[1].get_text().strip(), 
+					'音標':td[2].get_text().strip(),
+					})
+		return 對應閩南語資料
 	
 	def 編號(self, 數字對照表):
 		for i in range(len(self.國台字音表)):
@@ -120,7 +124,7 @@ if __name__ == "__main__":
 	這馬資料夾 = os.path.dirname(os.path.abspath(__file__))
 	excel處理工具 = excel處理()
 	所有字集 = ['一', '個']  # excel.excel_table_for_字元(r'../twblg_data_20131230/例句.xls')|excel.excel_table_for_字元(r'../twblg_data_20131230/釋義.xls')
-	數字對照表 = excel處理工具.excel_table_for_編號(os.path.join(這馬資料夾, '..', 'raw','詞目總檔.csv'))
+	數字對照表 = excel處理工具.excel_table_for_編號(os.path.join(這馬資料夾, '..', 'raw', '詞目總檔.csv'))
 	資料 = 資料處理()
 	資料.單字搜尋(所有字集, '')
 	for i in 資料.全部國語詞:
