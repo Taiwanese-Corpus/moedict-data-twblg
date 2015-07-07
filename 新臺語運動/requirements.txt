@@ -1,0 +1,1 @@
+-e git+https://github.com/conrado/libavwrapper@master#egg=libavwrapper
