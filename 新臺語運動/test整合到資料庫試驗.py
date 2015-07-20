@@ -75,6 +75,16 @@ class 整合到資料庫試驗(TestCase):
             }
         )
 
+    def test_日語詞目總檔結果(self):
+        self.assertEqual(
+            self.整理詞目總檔.正規化詞條音標({
+                '主編碼': 31001,
+                '文本資料': 'a33 lu55 mih3',
+                '種類': '字詞',
+            }),
+            None
+        )
+
     def test_一般又音結果(self):
         漢字, 音標, 校對 = self.整理又音.處理全部的漢字音標('一觸久仔', 'tsi̍t-táu-kú-á')
         self.assertEqual(漢字, '一觸久仔')
