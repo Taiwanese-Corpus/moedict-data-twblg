@@ -55,16 +55,17 @@ class 整理又音():
 
     def 處理全部的漢字音標(self, 漢字, 音標):
         try:
-            return self.正規化漢字音標(漢字, 音標)
+            return self.正規化漢字音標(漢字, 音標) + ([],)
         except:
             pass
         try:
-            return self.正規化漢字音標(
-                *self.漢字音標特別格式處理(
-                    漢字,
-                    音標
-                )
+            校對漢字, 校對音標 = self.漢字音標特別格式處理(
+                漢字,
+                音標)
+            正規化音標 = self.正規化漢字音標(
+                音標, 音標
             )
+            return 漢字, 正規化音標[1], [(校對漢字, 校對音標)]
         except Exception as 錯誤:
             print(錯誤, file=stderr)
 

@@ -1,11 +1,13 @@
 from unittest.case import TestCase
 from 新臺語運動.整理詞目總檔 import 整理詞目總檔
+from 新臺語運動.整理又音 import 整理又音
 
 
 class 整合到資料庫試驗(TestCase):
 
     def setUp(self):
         self.整理詞目總檔 = 整理詞目總檔()
+        self.整理又音 = 整理又音()
 
     def test_一般詞目總檔(self):
         self.assertEqual(
@@ -70,3 +72,15 @@ class 整合到資料庫試驗(TestCase):
                 }]
             }
         )
+
+    def test_一般又音結果(self):
+        漢字, 音標, 校對 = self.整理又音.處理全部的漢字音標('一觸久仔', 'tsi̍t-táu-kú-á')
+        self.assertEqual(漢字, '一觸久仔')
+        self.assertEqual(音標, 'tsit8-tau2-ku2-a2')
+        self.assertEqual(校對, [])
+
+    def test_有改又音結果(self):
+        漢字, 音標, 校對 = self.整理又音.處理全部的漢字音標('蓮蕉花', 'lân-tsiau')
+        self.assertEqual(漢字, '蓮蕉花')
+        self.assertEqual(音標, 'lan5-tsiau1')
+        self.assertEqual(校對, [('蓮蕉', 'lân-tsiau')])
