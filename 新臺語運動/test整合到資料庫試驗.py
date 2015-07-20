@@ -1,6 +1,7 @@
 from unittest.case import TestCase
 from 新臺語運動.整理詞目總檔 import 整理詞目總檔
 from 新臺語運動.整理又音 import 整理又音
+from 新臺語運動.整理方言詞 import 整理方言詞
 
 
 class 整合到資料庫試驗(TestCase):
@@ -8,6 +9,7 @@ class 整合到資料庫試驗(TestCase):
     def setUp(self):
         self.整理詞目總檔 = 整理詞目總檔()
         self.整理又音 = 整理又音()
+        self.整理方言詞 = 整理方言詞()
 
     def test_一般詞目總檔(self):
         self.assertEqual(
@@ -83,4 +85,18 @@ class 整合到資料庫試驗(TestCase):
         漢字, 音標, 校對 = self.整理又音.處理全部的漢字音標('蓮蕉花', 'lân-tsiau')
         self.assertEqual(漢字, '蓮蕉花')
         self.assertEqual(音標, 'lan5-tsiau1')
-        self.assertEqual(校對, [('蓮蕉', 'lân-tsiau')])
+        self.assertEqual(校對, [('蓮蕉', 'lan5-tsiau1')])
+
+    def test_一般方言結果(self):
+        結果 = self.整理方言詞.處理全部的漢字音標('干樂', 'kan-lo̍k')
+        漢字, 音標, 校對 = list(結果)[0]
+        self.assertEqual(漢字, '干樂')
+        self.assertEqual(音標, 'kan1-lok8')
+        self.assertEqual(校對, [])
+
+    def test_有改方言結果(self):
+        結果 = self.整理方言詞.處理全部的漢字音標('查某囡仔', 'tsa̋u-gín-á')
+        漢字, 音標, 校對 = list(結果)[0]
+        self.assertEqual(漢字, '查某囡仔')
+        self.assertEqual(音標, 'tsau9-gin2-a2')
+        self.assertEqual(校對, [('⿰查某囡仔', 'tsau9-gin2-a2')])

@@ -34,6 +34,7 @@ class 整理方言詞():
                 詞條.pop('流水號')
                 詞條.pop('資料編號')
                 for 結果 in self.提著全部的腔口(詞條):
+                    結果['華語'] = 華語
                     yield 結果
         return
 
@@ -55,20 +56,22 @@ class 整理方言詞():
     def 處理全部的漢字音標(self, 漢字, 音標):
         if self.是特別漢字音標(漢字, 音標.strip()):
             for 字, 音 in self.拆特別漢字音標(漢字, 音標.strip()):
-                yield self.正規化漢字音標(字, 音)
+                yield self.正規化漢字音標(字, 音) + ([],)
             return
         try:
-            yield self.正規化漢字音標(漢字, 音標.strip())
+            yield self.正規化漢字音標(漢字, 音標.strip()) + ([],)
             return
         except:
             pass
         try:
-            yield self.正規化漢字音標(
-                *self.漢字音標特別格式處理(
-                    漢字,
-                    音標.strip()
-                )
+            校對漢字, 校對音標 = self.漢字音標特別格式處理(
+                漢字,
+                音標.strip()
             )
+            正規化音標 = self.正規化漢字音標(
+                音標, 音標
+            )
+            yield 漢字, 正規化音標[1], [self.正規化漢字音標(校對漢字, 校對音標)]
         except Exception as 錯誤:
             print(漢字, 音標, 錯誤, file=stderr)
             pass
