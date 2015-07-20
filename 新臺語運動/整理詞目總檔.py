@@ -29,6 +29,7 @@ class 整理詞目總檔():
         self._譀鏡 = 物件譀鏡()
 
     def 得著詞條(self):
+        對應表 = self.編號對應華語()
         with open(join(dirname(abspath(__file__)), '..', 'uni', '詞目總檔.csv')) as 檔:
             讀檔 = DictReader(檔)
             for row in 讀檔:
@@ -36,8 +37,9 @@ class 整理詞目總檔():
                 row.pop('部首')
                 for 詞條 in self.詞目總檔(**row):
                     try:
-                        結果=self.正規化詞條音標(詞條)
+                        結果 = self.正規化詞條音標(詞條)
                         if 結果:
+                            對應表
                             yield 結果
                     except Exception as 錯誤:
                         print(錯誤, 詞條, file=stderr)
@@ -47,7 +49,7 @@ class 整理詞目總檔():
             音標 = 詞條['屬性']['音標']
         except:
             if self.詞目是音標.match(詞條['文本資料']):
-                if 詞條['主編碼'] > 31000 and 詞條['主編碼'] < 32000:
+                if int(詞條['主編碼']) > 31000 and int(詞條['主編碼']) < 32000:
                     return  # 予外來語來做
                 else:
                     raise RuntimeError('有音標組成的資料！？')
@@ -220,3 +222,13 @@ class 整理詞目總檔():
                     '屬性': {'音標': 'Jî', '腔口': '臺北優勢腔'},
                 }]
         raise RuntimeError('音讀不只兩區：{}'.format(音讀))
+
+    def 編號對應華語(self):
+        對應表 = {}
+        with open(join(dirname(abspath(__file__)), '..', 'uni', '對應華語.csv')) as 檔:
+            讀檔 = DictReader(檔)
+            for row in 讀檔:
+                if row['n_no'] not in 對應表:
+                    對應表[row['n_no']] = []
+                對應表[row['n_no']].append(row['kokgi'])
+        return 對應表
