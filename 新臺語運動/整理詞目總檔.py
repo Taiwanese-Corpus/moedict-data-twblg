@@ -39,7 +39,10 @@ class 整理詞目總檔():
                     try:
                         結果 = self.正規化詞條音標(詞條)
                         if 結果:
-                            對應表
+                            try:
+                                結果['華語'] = 對應表[結果['主編碼']]
+                            except:
+                                pass
                             yield 結果
                     except Exception as 錯誤:
                         print(錯誤, 詞條, file=stderr)
