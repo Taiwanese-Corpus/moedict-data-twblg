@@ -79,9 +79,7 @@ def 走(收錄者=整合到資料庫.薛丞宏):
         整理方言詞(),
         整理外來詞(),
     ]:
-        for 第幾个, 詞條 in enumerate(整合.得著詞條()):
-            if 第幾个 == 10:
-                break
+        for _第幾个, 詞條 in enumerate(整合.得著詞條()):
             try:
                 到資料庫.處理詞條(詞條, 收錄者)
             except Exception as e:
