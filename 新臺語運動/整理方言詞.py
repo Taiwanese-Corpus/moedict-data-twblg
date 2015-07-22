@@ -39,7 +39,7 @@ class 整理方言詞():
         return
 
     def 提著全部的腔口(self, 詞條):
-        for 腔, 方言音 in 詞條.items():
+        for 腔, 方言音 in sorted(詞條.items()):
             if 方言音.strip() not in ['x', '暫無資料']:
                 for 音 in 方言音.strip().split(','):
                     漢字, 音標組 = 音.strip().split('\u3000')
@@ -60,10 +60,12 @@ class 整理方言詞():
                 yield self.正規化漢字音標(字, 音) + ([],)
             return
         try:
-            yield self.正規化漢字音標(漢字, 音標.strip()) + ([],)
-            return
+            結果 = self.正規化漢字音標(漢字, 音標.strip()) + ([],)
         except:
             pass
+        else:
+            yield 結果
+            return
         try:
             校對漢字, 校對音標 = self.漢字音標特別格式處理(
                 漢字,
@@ -77,7 +79,7 @@ class 整理方言詞():
                 音標
             )
 
-            yield 漢字, 正規化音標[1], [(上尾漢字, 上尾音標)]
+            yield 漢字, 正規化音標, [(上尾漢字, 上尾音標)]
         except Exception as 錯誤:
             print(漢字, 音標, 錯誤, file=stderr)
 #             raise
