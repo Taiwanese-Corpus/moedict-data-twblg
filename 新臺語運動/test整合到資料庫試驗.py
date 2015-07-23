@@ -2,6 +2,7 @@ from unittest.case import TestCase
 from 新臺語運動.整理詞目總檔 import 整理詞目總檔
 from 新臺語運動.整理又音 import 整理又音
 from 新臺語運動.整理方言詞 import 整理方言詞
+from 新臺語運動.整理例句 import 整理例句
 
 
 class 整合到資料庫試驗(TestCase):
@@ -10,6 +11,7 @@ class 整合到資料庫試驗(TestCase):
         self.整理詞目總檔 = 整理詞目總檔()
         self.整理又音 = 整理又音()
         self.整理方言詞 = 整理方言詞()
+        self.整理例句 = 整理例句()
 
     def test_一般詞目總檔(self):
         self.assertEqual(
@@ -106,3 +108,29 @@ class 整合到資料庫試驗(TestCase):
         self.assertEqual(漢字, '查某囡仔')
         self.assertEqual(音標, 'tsau9-gin2-a2')
         self.assertEqual(校對, [('⿰查某囡仔', 'tsau9-gin2-a2')])
+
+    def test_檢查語句類型(self):
+        結果 = self.整理例句.例句類型('Âng-enn-á khàu kah tsi̍t sin-khu kuānn.')
+        self.assertEqual(結果, '語句')
+
+    def test_檢查字詞結果(self):
+        結果 = self.整理例句.例句類型('tsi̍t luí hue')
+        self.assertEqual(結果, '字詞')
+
+    def test_檢查專有詞結果(self):
+        結果 = self.整理例句.例句類型('Ông Tsiau-kun')
+        self.assertEqual(結果, '字詞')
+
+    def test_一般例句結果(self):
+        結果 = self.整理例句.整理漢字音標(
+            '若想著這層代誌，我就火大。',
+            'Nā siūnn-tio̍h tsit tsân tāi-tsì, guá tō hué-tuā.'
+        )
+        self.assertEqual(
+            結果,
+            (
+                '若想著這層代誌，我就火大。',
+                'na7 siunn7-tioh8 tsit4 tsan5 tai7-tsi3 , gua2 to7 hue2-tua7 .',
+                []
+            )
+        )
