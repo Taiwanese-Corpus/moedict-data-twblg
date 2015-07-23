@@ -134,3 +134,21 @@ class 整合到資料庫試驗(TestCase):
                 []
             )
         )
+
+    def test_校對例句結果(self):
+        結果 = self.整理例句.整理漢字音標(
+            '伊慣勢早睏，過九點就毋通閣敲電話予伊。',
+            'I kuàn-sì tsá-khùn, kuè káu tiám tō m̄-thang khà-tiān-uē hōo--i.'
+        )
+        self.assertEqual(
+            結果,
+            (
+                '伊慣勢早睏，過九點就毋通閣敲電話予伊。',
+                'i1 kuan3-si3 tsa2-khun3 , kue3 kau2 tiam2 to7 m7-thang1 kha3-tian7-ue7 hoo7-0i1 .',
+                [
+                    ('伊慣勢早睏，過九點就毋通閣敲電話予伊。',
+                     'i1 kuan3-si3 tsa2-khun3 , kue3 kau2 tiam2 to7 m7-thang1 koh4 kha3-tian7-ue7 hoo7-0i1 .'
+                     )
+                ]
+            )
+        )
