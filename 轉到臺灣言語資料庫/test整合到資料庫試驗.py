@@ -1,8 +1,8 @@
 from unittest.case import TestCase
-from 新臺語運動.整理詞目總檔 import 整理詞目總檔
-from 新臺語運動.整理又音 import 整理又音
-from 新臺語運動.整理方言詞 import 整理方言詞
-from 新臺語運動.整理例句 import 整理例句
+from 轉到臺灣言語資料庫.整理詞目總檔 import 整理詞目總檔
+from 轉到臺灣言語資料庫.整理又音 import 整理又音
+from 轉到臺灣言語資料庫.整理方言詞 import 整理方言詞
+from 轉到臺灣言語資料庫.整理例句 import 整理例句
 
 
 class 整合到資料庫試驗(TestCase):

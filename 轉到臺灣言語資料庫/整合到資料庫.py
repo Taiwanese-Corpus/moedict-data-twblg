@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from 新臺語運動.整理外來詞 import 整理外來詞
-from 新臺語運動.整理詞目總檔 import 整理詞目總檔
-from 新臺語運動.整理又音 import 整理又音
-from 新臺語運動.整理方言詞 import 整理方言詞
 from 臺灣言語資料庫.資料模型 import 外語表
 from 臺灣言語資料庫.資料模型 import 來源表
 from 臺灣言語資料庫.資料模型 import 版權表
 from 臺灣言語資料庫.資料模型 import 文本表
-from 新臺語運動.整理例句 import 整理例句
+from 轉到臺灣言語資料庫.整理詞目總檔 import 整理詞目總檔
+from 轉到臺灣言語資料庫.整理又音 import 整理又音
+from 轉到臺灣言語資料庫.整理方言詞 import 整理方言詞
+from 轉到臺灣言語資料庫.整理外來詞 import 整理外來詞
+from 轉到臺灣言語資料庫.整理例句 import 整理例句
 
 
 class 整合到資料庫:
