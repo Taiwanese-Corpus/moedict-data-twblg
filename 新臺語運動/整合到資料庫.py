@@ -11,9 +11,9 @@ from 新臺語運動.整理例句 import 整理例句
 
 
 class 整合到資料庫:
-    教育部閩南語辭典 = 來源表.objects.get_or_create(名='教育部閩南語辭典')[0].編號()
-    薛丞宏 = 來源表.objects.get_or_create(名='薛丞宏')[0].編號()
-    版權 = 版權表.objects.get_or_create(版權='姓名標示-禁止改作 3.0 台灣')[0].pk
+    教育部閩南語辭典 = 來源表.objects.get_or_create(名='教育部閩南語辭典')[0]
+    薛丞宏 = 來源表.objects.get_or_create(名='薛丞宏')[0]
+    版權 = 版權表.objects.get_or_create(版權='姓名標示-禁止改作 3.0 台灣')[0]
     公家內容 = {
         '版權': 版權,
         #         '種類':'字詞',
