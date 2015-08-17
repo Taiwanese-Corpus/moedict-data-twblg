@@ -163,8 +163,15 @@ class 整合到資料庫試驗(TestCase):
             self.得著詞條檢查(詞條)
 
     def test_整理方言詞得著詞條檢查(self):
+        有呱呱 = False
         for 詞條 in 整理方言詞().得著詞條():
             self.得著詞條檢查(詞條)
+            try:
+                if 詞條['文本資料'] == "呱呱" and 詞條['屬性']['音標'] == "ua̋k-ua̋k":
+                    有呱呱 = True
+            except KeyError:
+                pass
+        self.assertTrue(有呱呱, '愛有「呱呱」的詞條')
 
     def test_整理外來詞得著詞條檢查(self):
         for 詞條 in 整理外來詞().得著詞條():
