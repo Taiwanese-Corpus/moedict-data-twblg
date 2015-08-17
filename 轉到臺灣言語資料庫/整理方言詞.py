@@ -81,9 +81,11 @@ class 整理方言詞():
 
             yield 漢字, 正規化音標, [(上尾漢字, 上尾音標)]
         except Exception as 錯誤:
-            print(漢字, 音標, 錯誤, file=stderr)
-#             raise
-            pass
+            if (漢字, 音標) == ('呱呱', 'ua̋k-ua̋k'):  # 毋知按怎處理
+                yield 漢字, 音標, []
+            else:
+                print(漢字, 音標, 錯誤, file=stderr)
+                pass
 
     def 正規化漢字音標(self, 漢字, 音標):
         處理減號音標 = self._粗胚.建立物件語句前處理減號(臺灣閩南語羅馬字拼音, 音標)
@@ -200,7 +202,7 @@ class 整理方言詞():
 #                             資料型體 = "䆀猴𠢕欠數。"
         # m7 tioh8
         # if 音 == "niàu-ka-tsiah hit- ki":
-        #     # love you~
+        # love you~
         #     音 = "niàu-ka-tsiah hit-ki"
         return 資料型體, 音
 
