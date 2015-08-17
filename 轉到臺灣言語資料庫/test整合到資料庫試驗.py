@@ -3,6 +3,7 @@ from 轉到臺灣言語資料庫.整理詞目總檔 import 整理詞目總檔
 from 轉到臺灣言語資料庫.整理又音 import 整理又音
 from 轉到臺灣言語資料庫.整理方言詞 import 整理方言詞
 from 轉到臺灣言語資料庫.整理例句 import 整理例句
+from 轉到臺灣言語資料庫.整理外來詞 import 整理外來詞
 
 
 class 整合到資料庫試驗(TestCase):
@@ -152,3 +153,36 @@ class 整合到資料庫試驗(TestCase):
                 ]
             )
         )
+
+    def test_整理詞目總檔得著詞條檢查(self):
+        for 詞條 in 整理詞目總檔().得著詞條():
+            self.得著詞條檢查(詞條)
+
+    def test_整理又音得著詞條檢查(self):
+        for 詞條 in 整理又音().得著詞條():
+            self.得著詞條檢查(詞條)
+
+    def test_整理方言詞得著詞條檢查(self):
+        for 詞條 in 整理方言詞().得著詞條():
+            self.得著詞條檢查(詞條)
+
+    def test_整理外來詞得著詞條檢查(self):
+        for 詞條 in 整理外來詞().得著詞條():
+            self.得著詞條檢查(詞條)
+
+    def test_整理例句得著詞條檢查(self):
+        for 詞條 in 整理例句().得著詞條():
+            self.得著詞條檢查(詞條)
+
+    def 得著詞條檢查(self, 詞條):
+        self.assertIsInstance(詞條['文本資料'], str)
+        self.assertGreater(len(詞條['文本資料']), 0)
+        if '華語' in 詞條:
+            self.assertIsInstance(詞條['華語'], list)
+            for 華語 in 詞條['華語']:
+                self.assertIsInstance(華語, str)
+        if '校對' in 詞條:
+            self.assertIsInstance(詞條['校對'], list)
+            for 漢字, 音標 in 詞條['校對']:
+                self.assertIsInstance(漢字, str)
+                self.assertIsInstance(音標, str)
