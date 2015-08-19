@@ -20,6 +20,7 @@ git clone https://github.com/Taiwanese-Corpus/moedict-data-twblg.git
 sudo apt-get install -y python-virtualenv g++ libxml2-dev libxslt-dev python-dev
 virtualenv --python=python3 venv
 . venv/bin/activate
+pip install -r requirements.txt
 pip install -r moedict-data-twblg/轉到臺灣言語資料庫/requirements.txt
 echo "from 轉到臺灣言語資料庫.整合到資料庫 import 走 ; 走()" | PYTHONPATH=moedict-data-twblg python manage.py shell
 ```
