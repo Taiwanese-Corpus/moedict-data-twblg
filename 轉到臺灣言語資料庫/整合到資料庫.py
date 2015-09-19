@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from os import makedirs
+from os.path import abspath, dirname, join
+
 import yaml
 from 轉到臺灣言語資料庫.整理詞目總檔 import 整理詞目總檔
 from 轉到臺灣言語資料庫.整理又音 import 整理又音
@@ -37,7 +40,7 @@ class 整合到資料庫:
                         華語詞條資料[華語內容].append(臺語詞條)
                 except KeyError:
                     全部下層陣列.append(臺語詞條)
-        for 華語, 下層資料 in 華語詞條資料.items():
+        for 華語, 下層資料 in sorted(華語詞條資料.items()):
             華語種類, 華語文本 = 華語
             華語內容 = {
                 '來源': self.教育部閩南語辭典,
@@ -78,6 +81,7 @@ class 整合到資料庫:
 
 
 if __name__ == '__main__':
+    makedirs(join(dirname(abspath(__file__)), '資料'), exist_ok=True)
     全部資料 = 整合到資料庫().處理詞條()
-    with open('辭典.yaml', 'w') as 檔案:
+    with open(join(dirname(abspath(__file__)), '資料', 'xls整理.yaml'), 'w') as 檔案:
         yaml.dump(全部資料, 檔案, default_flow_style=False, allow_unicode=True)
