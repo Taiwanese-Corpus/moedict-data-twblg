@@ -1,2 +1,5 @@
 beautifulsoup4==4.3.2
 lxml==3.4.4
+pyyaml
+tai5-uan5-gian5-gi2-kang1-ku7
+tai5-uan5-gian5-gi2-tsu1-liau7-khoo3

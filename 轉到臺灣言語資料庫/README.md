@@ -29,7 +29,7 @@ echo "from 轉到臺灣言語資料庫.整合到資料庫 import 走 ; 走()" | 
 ###環境
 在`moedict-data-twblg`專案目錄下
 ```
-sudo apt-get install -y python-virtualenv g++ libxml2-dev libxslt-dev python-dev
+sudo apt-get install -y python-virtualenv g++ libxml2-dev libxslt-dev python3-dev libz-dev
 virtualenv --python=python3 venv
 . venv/bin/activate
 pip install -r 轉到臺灣言語資料庫/requirements.txt
@@ -42,7 +42,7 @@ python -m unittest
 
 ### 產生yaml檔
 ```
-PYTHONPATH=. python 轉到臺灣言語資料庫/整合到資料庫.py 
-PYTHONPATH=. python 轉到臺灣言語資料庫/整合匯出異用字.py 
+PYTHONPATH=. python 轉到臺灣言語資料庫/整合到資料庫.py
+PYTHONPATH=. python 轉到臺灣言語資料庫/整合匯出異用字.py
 
 ```
