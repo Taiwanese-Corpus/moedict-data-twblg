@@ -14,15 +14,8 @@
 
 
 ## 匯入資料庫
-在`臺灣言語資料庫`專案目錄下
 ```bash
-git clone https://github.com/Taiwanese-Corpus/moedict-data-twblg.git
-sudo apt-get install -y python-virtualenv g++ libxml2-dev libxslt-dev python-dev
-virtualenv --python=python3 venv
-. venv/bin/activate
-pip install -r requirements.txt
-pip install -r moedict-data-twblg/轉到臺灣言語資料庫/requirements.txt
-echo "from 轉到臺灣言語資料庫.整合到資料庫 import 走 ; 走()" | PYTHONPATH=moedict-data-twblg python manage.py shell
+python manage.py 匯入資料 https://Taiwanese-Corpus.github.io/moedict-data-twblg/轉到臺灣言語資料庫/資料/xls整理.yaml https://Taiwanese-Corpus.github.io/moedict-data-twblg/轉到臺灣言語資料庫/資料/異用字.yaml
 ```
 
 ## 開發試驗
