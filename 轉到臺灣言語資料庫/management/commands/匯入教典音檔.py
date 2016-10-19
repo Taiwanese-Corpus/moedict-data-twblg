@@ -1,5 +1,5 @@
 from csv import DictReader
-from os.path import basename, join
+from os.path import basename, join, dirname
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -38,7 +38,9 @@ class Command(BaseCommand):
 
         'https://github.com/g0v/moedict-data-twblg/tree/master/uni'
         詞目 = {}
-        with open('語音合成訓練範例-臺語教典/詞目總檔.csv') as 檔案:
+        with open(
+            join(dirname(__file__), '..', '..', '..', 'uni', '詞目總檔.csv')
+        ) as 檔案:
             for 一筆 in DictReader(檔案):
                 編號 = 一筆['主編碼'].strip()
                 漢字 = 一筆['詞目'].strip()
