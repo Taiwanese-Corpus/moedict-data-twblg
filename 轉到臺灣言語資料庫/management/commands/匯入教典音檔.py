@@ -60,14 +60,14 @@ class Command(BaseCommand):
             '來源': 來源表.objects.get_or_create(名='臺灣閩南語常用詞辭典')[0].編號(),
             '版權': 版權表.objects.get_or_create(版權='會使公開')[0].pk,
             '種類': '字詞',
-            '語言腔口': '臺語',
+            '語言腔口': '閩南語',
             '著作所在地': '臺灣',
             '著作年': str(timezone.now().year),
             '屬性': {'語者': '陳秀蓉'}
         }
         匯入數量 = 0
         for 音檔目錄, _資料夾, 路徑陣列 in walk(參數['音檔資料夾路徑']):
-            for 路徑 in 路徑陣列:
+            for 路徑 in sorted(路徑陣列):
                 音檔路徑 = join(音檔目錄, 路徑)
                 if 音檔路徑.endswith('.wav'):
                     try:
